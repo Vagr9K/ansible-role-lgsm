@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Ruben Harutyunyan
+  description: Installs and configures LinuxGSM servers.
+  license: MIT
+  min_ansible_version: 2.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - server
+    - linuxgsm
