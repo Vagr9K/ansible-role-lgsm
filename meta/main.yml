@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: lgsm
   author: Ruben Harutyunyan
   description: Installs and configures LinuxGSM servers.
   license: MIT
