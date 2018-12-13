@@ -13,10 +13,10 @@ lgsm_server_file_name: ""
 lgsm_server_group: "lgsm"
 # LGSM server user name
 lgsm_server_user: "lgsm"
-# LGSM server config configuration
-lgsm_server_common_config: ""
-# LGSM server specific configuration
-lgsm_server_specific_config: ""
+# LGSM server config configuration (uncomment to set)
+# lgsm_server_common_config: ""
+# LGSM server specific configuration (uncomment to set)
+# lgsm_server_specific_config: ""
 # LGSM commands to run after initialization of the server file
 lgsm_server_commands:
   - "auto-install"

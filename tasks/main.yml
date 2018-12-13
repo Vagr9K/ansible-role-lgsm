@@ -40,13 +40,13 @@
     create: yes
     path: "/home/{{ lgsm_server_user }}/lgsm/config-lgsm/{{ lgsm_server_name }}/common.cfg"
     block: "{{ lgsm_server_common_config }}"
-  when: lgsm_server_common_config != ''
+  when: lgsm_server_common_config is defined
 - name: "Apply LGSM {{ lgsm_server_file_name }} config"
   blockinfile:
     create: yes
     path: "/home/{{ lgsm_server_user }}/lgsm/config-lgsm/{{ lgsm_server_name }}/{{ lgsm_server_file_name }}.cfg"
     block: "{{ lgsm_server_specific_config }}"
-  when: lgsm_server_specific_config != ''
+  when: lgsm_server_specific_config is defined
 - include_tasks: run_commands.yml
   loop: "{{ lgsm_server_commands }}"
   loop_control:
