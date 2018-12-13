@@ -1,0 +1,10 @@
+- name: Install LGSM dependencies (add i386 arch)
+  command: dpkg --add-architecture i386
+  when: ansible_architecture != 'i386'
+- name: Install LGSM dependencies (update package list)
+  apt:
+    update_cache: yes
+- name: Install LGSM dependencies
+  apt:
+    name: "{{ item }}"
+  loop: "{{ lgsm_dependencies }}"

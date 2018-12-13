@@ -1,0 +1,7 @@
+- name: "Run {{ item }} as a command for {{ lgsm_server_file_name }}"
+  command: "/home/{{ lgsm_server_user }}/{{ lgsm_server_file_name }} {{ item }}"
+  register: command_output
+  become: yes
+  become_user: "{{ lgsm_server_user }}"
+  changed_when: True
+- debug: msg = "{{ command_output.stdout }}"

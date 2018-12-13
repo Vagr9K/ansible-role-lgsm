@@ -1,0 +1,53 @@
+- import_tasks: lgsm_deps.yml
+- name: Ensure LGSM Server Group exists
+  group:
+    name: "{{ lgsm_server_group }}"
+    system: yes
+- name: Ensure LGSM Server user exists
+  user:
+    name: "{{ lgsm_server_user }}"
+    group: "{{ lgsm_server_group }}"
+    system: yes
+- name: Download LGSM server creator
+  get_url:
+    url: https://linuxgsm.sh
+    dest: "/home/{{ lgsm_server_user }}/linuxgsm.sh"
+    mode: 0777
+    owner: "{{ lgsm_server_user }}"
+- name: "Create {{ lgsm_server_name }} server"
+  command: "/home/{{ lgsm_server_user }}/linuxgsm.sh  {{ lgsm_server_name }}"
+  args:
+    chdir: "/home/{{ lgsm_server_user }}"
+    creates: "/home/{{ lgsm_server_user }}/ {{ lgsm_server_name }}"
+  register: command_output
+  become: yes
+  become_user: "{{ lgsm_server_user }}"
+- name: Find created filename
+  set_fact:
+    lgsm_created_file: "{{ command_output.stdout | regex_findall('Installed .+ server as (.+?)\\n') }}"
+- name: "Renaming {{ lgsm_created_file[0] }} to {{ lgsm_server_file_name }}"
+  copy:
+    src: "/home/{{ lgsm_server_user }}/{{ lgsm_created_file[0] }}"
+    dest: "/home/{{ lgsm_server_user }}/{{ lgsm_server_file_name }}"
+    mode: 0777
+    remote_src: True
+  become: yes
+  become_user: "{{ lgsm_server_user }}"
+- debug:
+    msg: "{{ command_output.stdout }}"
+- name: Apply LGSM common config
+  blockinfile:
+    create: yes
+    path: "/home/{{ lgsm_server_user }}/lgsm/config-lgsm/{{ lgsm_server_name }}/common.cfg"
+    block: "{{ lgsm_server_common_config }}"
+  when: lgsm_server_common_config != ''
+- name: "Apply LGSM {{ lgsm_server_file_name }} config"
+  blockinfile:
+    create: yes
+    path: "/home/{{ lgsm_server_user }}/lgsm/config-lgsm/{{ lgsm_server_name }}/{{ lgsm_server_file_name }}.cfg"
+    block: "{{ lgsm_server_specific_config }}"
+  when: lgsm_server_specific_config != ''
+- include_tasks: run_commands.yml
+  loop: "{{ lgsm_server_commands }}"
+  loop_control:
+    loop_var: item
