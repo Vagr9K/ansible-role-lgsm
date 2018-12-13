@@ -4,4 +4,5 @@
   become: yes
   become_user: "{{ lgsm_server_user }}"
   changed_when: True
-- debug: msg = "{{ command_output.stdout }}"
+- debug:
+    msg: "{{ command_output.stdout }}"
